@@ -11,7 +11,7 @@ const UserItem = (props) => {
     return (
         <li className="user-item">
             <Card className="user-item__content">
-                <Link to={`/${props.id}/place`}>
+                <Link to={`/${props.id}/places`}>
                     <div className="user-item__imge">
                         <Avater className={props.name} imgs={props.img} alts={props.name} />
                     </div>
