@@ -1,57 +1,30 @@
-import React, { useCallback, useReducer } from 'react';
+import React from 'react';
 
 
 import Input from '../../shared/components/FormElementd/Input';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/util/validators'
 import Button from '../../shared/components/FormElementd/Button';
+import { useForm } from '../../shared/hooks/form-hook'
 import './NewPlace.css';
 
 
-const fromReduser = (state, action) => {
-    switch (action.type) {
-        case 'INPUT_CHANGE':
-            let formIsValid = true;
-            for (const inputId in state.inputs) {
-                if (inputId === action.id) {
-                    formIsValid = formIsValid && action.isValid;
-                } else {
-                    formIsValid = formIsValid && state.inputs[inputId].isValid;
-                }
-            }
-            return {
-                ...state,
-                inputs: {
-                    ...state.inputs,
-                    [action.inputId]: { value: action.value, isValid: action.isValid }
-                },
-                isValid: formIsValid
-            };
-        default:
-            return state;
-    }
-}
 
 const NewPlace = () => {
-    const [formState, dispatch] = useReducer(fromReduser, {
-        inputs: {
-            title: {
-                value: '',
-                isValid: false
-            },
-            description: {
-                value: '',
-                isValid: false
-            },
-            address: {
-                value: '',
-                isValid: false
-            }
+    const [formState, inputHandler] = useForm({
+        title: {
+            value: '',
+            isValid: false
         },
-        isValid: false
-    });
-    const inputHandler = useCallback((id, value, isValid) => {
-        dispatch({ type: 'INPUT_CHANGE', value: value, isValid: isValid, inputId: id })
-    }, [dispatch]);
+        description: {
+            value: '',
+            isValid: false
+        },
+        address: {
+            value: '',
+            isValid: false
+        }
+    }, false);
+
 
     const placeDubmitHandler = event => {
         event.preventDefault();
