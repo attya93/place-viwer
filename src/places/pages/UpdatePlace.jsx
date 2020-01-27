@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+
+
 import Input from '../../shared/components/FormElementd/Input';
-import Button from '../../shared/components/FormElementd/Button'
+import Button from '../../shared/components/FormElementd/Button';
+import Card from '../../shared/components/UIElement/Card';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/util/validators'
 
 import { useForm } from '../../shared/hooks/form-hook';
@@ -35,20 +38,38 @@ const DUMMY_PLACE = [
     }
 ]
 
-const UpdatePlace = (props) => {
+const UpdatePlace = () => {
     const placeId = useParams().placeId;
-    const identifiliedPlce = DUMMY_PLACE.find(place => place.id === +placeId);
-    const [formState, inputHandler] = useForm({
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [formState, inputHandler, setFormData] = useForm({
         title: {
-            value: identifiliedPlce.title,
-            isValid: true
+            value: '',
+            isValid: false
         },
         description: {
-            value: identifiliedPlce.desc,
-            isValid: true
+            value: "",
+            isValid: false
         }
-    }, true);
+    }, false);
 
+    const identifiliedPlce = DUMMY_PLACE.find(place => place.id === +placeId);
+    useEffect(() => {
+        if (identifiliedPlce) {
+            setFormData(
+                {
+                    title: {
+                        value: identifiliedPlce.title,
+                        isValid: true
+                    },
+                    description: {
+                        value: identifiliedPlce.desc,
+                        isValid: true
+                    }
+                }, true);
+        }
+        setIsLoading(false);
+    }, [setFormData, identifiliedPlce])
 
     const placeUpdateSubmtHandler = (event) => {
         event.preventDefault();
@@ -56,7 +77,14 @@ const UpdatePlace = (props) => {
     }
 
     if (!identifiliedPlce) {
-        return <div className="center"><h2>Could not find place</h2> </div>
+        return <div className="center">
+            <Card>
+                <h2>Could not find place</h2>
+            </Card>
+        </div>
+    }
+    if (isLoading) {
+        return <div className="center"><h2>Loadin....</h2> </div>
     }
     return (
         <form className="place-form" onSubmit={placeUpdateSubmtHandler}>
@@ -71,11 +99,11 @@ const UpdatePlace = (props) => {
                 initalValid={formState.inputs.title.isValid}
             />
             <Input
-                id="discription"
+                id="description"
                 element="textarea"
-                label="Discription"
+                label="Description"
                 validators={[VALIDATOR_MINLENGTH(5)]}
-                errorText='Pleace Enter a Valid discription(at least 5 characters)'
+                errorText='Pleace Enter a Valid description(at least 5 characters)'
                 onInput={inputHandler}
                 initalValue={formState.inputs.description.value}
                 initalValid={formState.inputs.description.isValid}

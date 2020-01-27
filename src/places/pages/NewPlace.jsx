@@ -10,29 +10,29 @@ import './NewPlace.css';
 
 
 const NewPlace = () => {
-    const [formState, inputHandler] = useForm({
-        title: {
-            value: '',
-            isValid: false
-        },
-        description: {
-            value: '',
-            isValid: false
-        },
-        address: {
-            value: '',
-            isValid: false
-        }
-    }, false);
+    const [formState, inputHandler] = useForm(
+        {
+            title: {
+                value: '',
+                isValid: false
+            },
+            description: {
+                value: '',
+                isValid: false
+            },
+            address: {
+                value: '',
+                isValid: false
+            }
+        }, false);
 
-
-    const placeDubmitHandler = event => {
+    const placeSubmitHandler = event => {
         event.preventDefault();
         console.log(formState.inputs); //send this tp backend
     }
 
     return (
-        <form className="place-form" onSubmit={placeDubmitHandler}>
+        <form className="place-form" onSubmit={placeSubmitHandler}>
             <Input
                 id="title"
                 element='input'
@@ -49,7 +49,7 @@ const NewPlace = () => {
                 errorText='Pleace Enter a Valid description (at least 5 characters)'
                 onInput={inputHandler} />
             <Input
-                id="adress"
+                id="address"
                 element='input'
                 type='text'
                 label="Address"
